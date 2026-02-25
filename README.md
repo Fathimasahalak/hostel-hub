@@ -1,16 +1,15 @@
 # Hostel Hub - Hostel Management System 🎯
 
 ## Basic Details
-**Team Name:** [Your Team Name]
+**Team Name:** Fathima Sahala k
 ### Team Members
-*   **Member 1:** [Your Name] - [Your College]
-*   **Member 2:** [Partner Name] - [Partner College]
+*   **Member 1:** Fathima Sahala K
 
 ### Hosted Project Link
-[Link to be added after hosting]
+https://hostel-hub-kohl.vercel.app/
 
 ## Project Description
-Hostel Hub is a comprehensive full-stack management platform designed to automate and streamline daily hostel operations. It integrates attendance tracking, dynamic fee calculation, grievance management, and community interactions into a single, user-friendly interface.
+Hostel Hub is a comprehensive full-stack management platform designed to automate and streamline daily hostel operations. It integrates attendance tracking, dynamic fee calculation, complaint management, and community interactions into a single, chatbot user-friendly interface.
 
 ## The Problem Statement
 Traditional hostel management relies on manual registers for attendance and billing, leading to human errors, delayed responses to student complaints, and a lack of organized community engagement within the hostel premises.
@@ -67,14 +66,9 @@ We have developed a digital ecosystem that:
 
 ## Project Documentation
 ### Screenshots (Placeholder)
-![Dashboard](public/placeholder.svg) 
-*Caption: Admin Dashboard showing real-time statistics of attendance and pending complaints.*
 
-![Attendance Page](public/placeholder.svg) 
-*Caption: Student View of the monthly attendance calendar.*
+https://drive.google.com/file/d/1oc2UMl8tb5a9Gt7v1WGRhRhrEUlTFeLl/view?usp=drive_link 
 
-![Community Page](public/placeholder.svg) 
-*Caption: Community Circles where students interact and post updates.*
 
 ### Diagrams
 #### System Architecture:
@@ -120,7 +114,7 @@ The system follows a **Client-Server Architecture**.
 
 ## Team Contributions
 *   **[Member 1]**: Backend development, Database design, API integration.
-*   **[Member 2]**: Frontend UI development, State management, Documentation.
+
 
 ## License
 This project is licensed under the **MIT License** - see the LICENSE file for details.
