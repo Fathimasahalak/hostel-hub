@@ -70,7 +70,7 @@ const AdminDashboard = ({ stats }: { stats: any }) => {
   const openComplaints = complaints.filter((c: any) => c.status === 'open').length || 0;
 
   const quickStats = [
-    { label: "Present Today", value: presentCount.toString(), icon: CalendarDays, to: "/attendance", color: "bg-primary/10 text-primary" },
+    { label: "Present Today", value: presentCount.toString(), icon: CalendarDays, to: "/attendance", color: "bg-destructive/10 text-primary" },
     { label: "Absent Today", value: absentCount.toString(), icon: AlertCircle, to: "/attendance", color: "bg-destructive/10 text-destructive" },
     { label: "Open Complaints", value: openComplaints.toString(), icon: MessageSquareWarning, to: "/complaints", color: "bg-accent/10 text-accent-foreground" },
     { label: "Total Students", value: "View All", icon: Users, to: "/attendance", color: "bg-info/10 text-info" },
@@ -79,7 +79,7 @@ const AdminDashboard = ({ stats }: { stats: any }) => {
   return (
     <div className="space-y-6 animate-fade-in">
       <div>
-        <h1 className="text-2xl font-bold text-foreground">Admin Dashboard</h1>
+        <h1 className="text-2xl font-bold text-white">Admin Dashboard</h1>
         <p className="text-muted-foreground">Manage hostel operations</p>
       </div>
 
@@ -88,24 +88,32 @@ const AdminDashboard = ({ stats }: { stats: any }) => {
           <Link
             key={label}
             to={to}
-            className="bg-card rounded-xl border border-border p-5 shadow-card hover:shadow-card-hover transition-all group"
+            className="bg-[#2a2232] rounded-xl p-5 shadow-card hover:shadow-card-hover hover:scale-[1.02] transition-all group"
           >
-            <div className="flex items-center gap-3">
-              <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${color}`}>
-                <Icon className="w-5 h-5" />
-              </div>
-              <div>
-                <p className="text-sm text-muted-foreground">{label}</p>
-                <p className="text-xl font-bold text-foreground">{value}</p>
-              </div>
-            </div>
+            <div className="flex flex-col justify-between h-full">
+  
+  {/* Top row: label + icon */}
+  <div className="flex justify-between items-start">
+    <p className="text-sm text-muted-foreground">{label}</p>
+
+    <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${color}`}>
+      <Icon className="w-5 h-5 text-white" />
+    </div>
+  </div>
+
+  {/* Bottom value */}
+  <p className="text-2xl font-bold text-white mt-4">
+    {value}
+  </p>
+
+</div>
           </Link>
         ))}
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <Card>
-          <CardHeader>
+          <CardHeader className="text-white" >
             <CardTitle>Recent Complaints</CardTitle>
           </CardHeader>
           <CardContent>
@@ -152,7 +160,7 @@ const StudentDashboard = ({ stats, user }: { stats: any, user: any }) => {
   return (
     <div className="space-y-6 animate-fade-in">
       <div>
-        <h1 className="text-2xl font-bold text-foreground">Welcome, {user?.name}</h1>
+        <h1 className="text-2xl font-bold text-white">Welcome, {user?.name}</h1>
         <p className="text-muted-foreground">Your hostel dashboard</p>
       </div>
 
@@ -161,17 +169,23 @@ const StudentDashboard = ({ stats, user }: { stats: any, user: any }) => {
           <Link
             key={label}
             to={to}
-            className="bg-card rounded-xl border border-border p-5 shadow-card hover:shadow-card-hover transition-all group"
+            className="bg-[#2a2232] rounded-xl p-5 shadow-card hover:shadow-card-hover hover:scale-[1.02] transition-all group"
           >
-            <div className="flex items-center gap-3">
-              <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${color}`}>
-                <Icon className="w-5 h-5" />
-              </div>
-              <div>
-                <p className="text-sm text-muted-foreground">{label}</p>
-                <p className="text-xl font-bold text-foreground">{value}</p>
-              </div>
-            </div>
+           <div className="flex flex-col justify-between h-full">
+  {/* Top row: label + icon */}
+  <div className="flex justify-between items-start">
+    <p className="text-sm text-muted-foreground">{label}</p>
+
+    <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${color}`}>
+      <Icon className="w-5 h-5 text-white" />
+    </div>
+  </div>
+
+  {/* Bottom value */}
+  <p className="text-2xl font-bold text-white mt-4">
+    {value}
+  </p>
+</div>
           </Link>
         ))}
       </div>
