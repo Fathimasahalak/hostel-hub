@@ -8,24 +8,12 @@ import {
   Users,
   LogOut,
   Building2,
-  ChevronLeft,
   Menu,
   Utensils,
 } from "lucide-react";
-import { useState } from "react";
-
-const navItems = [
-  { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { to: "/attendance", label: "Attendance", icon: CalendarDays },
-  { to: "/bills", label: "Hostel Bills", icon: Receipt },
-  { to: "/complaints", label: "Complaints", icon: MessageSquareWarning },
-  { to: "/mess", label: "Mess Menu", icon: Utensils },
-  { to: "/community", label: "Community", icon: Users },
-];
 
 const AppSidebar = () => {
   const { logout, user } = useAuth();
-  const [collapsed, setCollapsed] = useState(false);
   const location = useLocation();
 
   const initials = user?.name
@@ -34,145 +22,84 @@ const AppSidebar = () => {
 
   return (
     <>
-      {/* Mobile toggle */}
-      <button
-        onClick={() => setCollapsed(false)}
-        className="lg:hidden fixed top-4 left-4 z-50 p-2 rounded-lg border"
-        style={{
-          background: "#18121E",
-          borderColor: "rgba(255,255,255,0.12)",
-          display: collapsed ? "none" : undefined,
-        }}
-      >
-        <Menu className="w-5 h-5 text-white" />
-      </button>
+      <aside className={`fixed inset-y-0 left-0 z-40 bg-slate-100 border-r border-slate-200 shadow-sm flex flex-col w-64 h-screen overflow-hidden`}>
+        {/* Header / Logo */}
+        <div className="flex items-center gap-3 px-6 h-[88px] shrink-0 relative z-10">
+          <div className="flex items-center justify-center w-9 h-9 rounded-lg shrink-0 bg-blue-600 text-white shadow-sm">
+            <Building2 className="w-5 h-5" />
+          </div>
 
-      <aside
-  className={`fixed inset-y-0 left-4 top-2 z-40 flex flex-col gap-2 p-3 transition-all duration-300 ${
-    collapsed ? "w-[68px]" : "w-60"
-  }`}
-  
-   
->
-
-  {/* MAIN CARD */}
-  <div
-    className="flex flex-col gap-3 p-3 rounded-xl flex-1"
-    style={{
-      background: "#412959",
-    }}
-  >
-
-    {/* Logo */}
-    <div className="flex items-center gap-3">
-      <div
-        className="flex items-center justify-center w-8 h-8 rounded-lg shrink-0"
-        style={{ background: "rgba(255,255,255,0.12)" }}
-      >
-        <Building2 className="w-4 h-4 text-white" />
-      </div>
-
-      {!collapsed && (
-        <span className="font-medium text-white text-sm">
-          HostelHub
-        </span>
-      )}
-
-      <button
-        onClick={() => setCollapsed(!collapsed)}
-        className="ml-auto p-1 rounded hidden lg:block"
-        style={{ color: "rgba(255,255,255,0.4)" }}
-      >
-        <ChevronLeft
-          className={`w-4 h-4 transition-transform ${
-            collapsed ? "rotate-180" : ""
-          }`}
-        />
-      </button>
-    </div>
-
-    {/* User */}
-    {user && (
-      <div className="flex items-center gap-3 mt-2">
-        <div
-          className="flex items-center justify-center w-8 h-8 rounded-full text-xs font-medium text-white"
-          style={{
-            background:
-              "linear-gradient(135deg, #7c5cbf, #4a3080)",
-          }}
-        >
-          {initials}
+          <span className="font-semibold text-slate-900 text-lg tracking-tight">
+            Hostel<span className="text-blue-600">Hub</span>
+          </span>
         </div>
 
-        {!collapsed && (
-          <div>
-            <p className="text-sm font-medium text-white truncate">
-              {user.name}
-            </p>
+        {/* Navigation Content */}
+        <div className="flex flex-col flex-1 overflow-y-auto scrollbar-hide px-4 pt-6" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+          <style>{`
+            .scrollbar-hide::-webkit-scrollbar {
+                display: none;
+            }
+          `}</style>
 
-            <p
-              className="text-xs capitalize"
-              style={{ color: "rgba(255,255,255,0.45)" }}
+          <div className="flex flex-col gap-1.5 mb-6">
+            <NavLink
+              to="/dashboard"
+              className={({ isActive }) => `flex items-center gap-3.5 px-3 py-2.5 rounded-lg text-[15px] font-medium transition-colors ${isActive ? "text-blue-700 bg-blue-100/50" : "text-slate-900 hover:bg-slate-200"}`}
             >
-              {user.role}
-            </p>
+              <LayoutDashboard className={`w-[22px] h-[22px] shrink-0`} />
+              <span>Dashboard</span>
+            </NavLink>
+            <NavLink
+              to="/attendance"
+              className={({ isActive }) => `flex items-center gap-3.5 px-3 py-2.5 rounded-lg text-[15px] font-medium transition-colors ${isActive ? "text-blue-700 bg-blue-100/50" : "text-slate-900 hover:bg-slate-200"}`}
+            >
+              <CalendarDays className={`w-[22px] h-[22px] shrink-0`} />
+              <span>Attendance</span>
+            </NavLink>
+            <NavLink
+              to="/bills"
+              className={({ isActive }) => `flex items-center gap-3.5 px-3 py-2.5 rounded-lg text-[15px] font-medium transition-colors ${isActive ? "text-blue-700 bg-blue-100/50" : "text-slate-900 hover:bg-slate-200"}`}
+            >
+              <Receipt className={`w-[22px] h-[22px] shrink-0`} />
+              <span>Hostel Bills</span>
+            </NavLink>
+            <NavLink
+              to="/community"
+              className={({ isActive }) => `flex items-center gap-3.5 px-3 py-2.5 rounded-lg text-[15px] font-medium transition-colors ${isActive ? "text-blue-700 bg-blue-100/50" : "text-slate-900 hover:bg-slate-200"}`}
+            >
+              <Users className={`w-[22px] h-[22px] shrink-0`} />
+              <span>Community Hub</span>
+            </NavLink>
+            <NavLink
+              to="/complaints"
+              className={({ isActive }) => `flex items-center gap-3.5 px-3 py-2.5 rounded-lg text-[15px] font-medium transition-colors ${isActive ? "text-blue-700 bg-blue-100/50" : "text-slate-900 hover:bg-slate-200"}`}
+            >
+              <MessageSquareWarning className={`w-[22px] h-[22px] shrink-0`} />
+              <span>Complaints</span>
+            </NavLink>
+            <NavLink
+              to="/mess"
+              className={({ isActive }) => `flex items-center gap-3.5 px-3 py-2.5 rounded-lg text-[15px] font-medium transition-colors ${isActive ? "text-blue-700 bg-blue-100/50" : "text-slate-900 hover:bg-slate-200"}`}
+            >
+              <Utensils className={`w-[22px] h-[22px] shrink-0`} />
+              <span>Mess Menu</span>
+            </NavLink>
           </div>
-        )}
-      </div>
-    )}
+        </div>
 
-    {/* Divider */}
-    <div className="h-px bg-white/10 my-2" />
-
-    {/* Nav Links */}
-    <div className="flex flex-col gap-1 flex-1">
-      {navItems.map(({ to, label, icon: Icon }) => {
-        const isActive = location.pathname === to;
-
-        return (
-          <NavLink
-            key={to}
-            to={to}
-            className="flex items-center gap-3 px-2.5 py-2 rounded-lg text-sm font-medium transition-all"
-            style={{
-              background: isActive
-                ? "rgba(255,255,255,0.12)"
-                : "transparent",
-              color: isActive
-                ? "#ffffff"
-                : "rgba(255,255,255,0.55)",
-            }}
-          >
-            <Icon className="w-4 h-4 shrink-0" />
-
-            {!collapsed && <span>{label}</span>}
-          </NavLink>
-        );
-      })}
-    </div>
-
-  </div>
-
-
-  {/* SEPARATE SIGN OUT CARD */}
-  <div
-    className="p-2 rounded-xl"
-    style={{
-      background: "#412959",
-    }}
-  >
-    <button
-      onClick={logout}
-      className="flex items-center gap-3 w-full px-2.5 py-2 rounded-lg text-sm transition-colors"
-      style={{ color: "rgba(255,255,255,0.4)" }}
-    >
-      <LogOut className="w-4 h-4 shrink-0" />
-
-      {!collapsed && "Sign out"}
-    </button>
-  </div>
-
-</aside>
+        {/* Footer / Log Out */}
+        <div className="px-4 py-6 mt-auto">
+            <button
+              onClick={logout}
+              className="flex items-center gap-3.5 px-3 py-2.5 w-full rounded-lg text-[15px] font-medium text-black hover:text-red-700 hover:bg-red-100 transition-colors group"
+              title="Sign Out"
+            >
+              <LogOut className="w-[22px] h-[22px] shrink-0 group-hover:scale-110 transition-transform" />
+              <span>Log Out</span>
+            </button>
+        </div>
+      </aside>
     </>
   );
 };

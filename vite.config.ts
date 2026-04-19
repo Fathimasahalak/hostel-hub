@@ -1,6 +1,6 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
-import path from "path";
+import path from "path"; // Forced Vite Restart
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
   server: {

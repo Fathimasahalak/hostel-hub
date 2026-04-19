@@ -317,20 +317,19 @@ const CommunityPage = () => {
   };
 
   return (
-    <div className="max-w-6xl mx-auto pb-12 px-4 md:px-6">
-      <div className="flex flex-col md:flex-row gap-4 md:gap-8">
+    <div className="w-full pb-12 px-4 md:px-6">
+      <div className="flex flex-col xl:flex-row gap-4 xl:gap-8">
         {/* Left Column: Feed */}
         <div className="flex-1 space-y-6">
-          <header className="mb-2">
-            <h1 className="text-4xl font-black text-foreground tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/60">Community Hub</h1>
-            <p className="text-muted-foreground mt-2 text-lg font-medium">Connect, Share, and Thriving together.</p>
+          <header className="mb-8 relative z-10">
+            <h1 className="text-4xl font-bold tracking-tight text-slate-900 mb-2">Community <span className="text-blue-600">Hub</span></h1>
+            <p className="text-slate-500 text-sm">Connect, share, and thrive together with the hostel community.</p>
           </header>
 
           {/* Create Post Card */}
-          <Card className="p-0 border-none shadow-2xl bg-card/40 backdrop-blur-xl ring-1 ring-border/50 overflow-hidden relative group">
-            <div className="h-1.5 w-full bg-gradient-to-r from-primary/40 via-primary to-primary/40"></div>
-            <div className="p-6">
-              <div className="flex gap-4">
+          <Card className="p-6 bg-white border border-slate-200 shadow-sm rounded-2xl mb-8 relative group overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-b from-white/[0.02] to-transparent pointer-events-none"></div>
+            <div className="flex gap-4 relative z-10">
                 <Avatar className="w-12 h-12 ring-4 ring-primary/10 shadow-lg">
                   <AvatarImage src={currentUser?.avatar} />
                   <AvatarFallback className="bg-primary/10 text-primary font-bold">{currentUser?.name?.[0] || '?'}</AvatarFallback>
@@ -382,14 +381,13 @@ const CommunityPage = () => {
                     <Button
                       onClick={handleCreatePost}
                       disabled={!newPostContent.trim() || isPosting}
-                      className="bg-primary text-primary-foreground px-8 rounded-full shadow-lg shadow-primary/20 hover:shadow-primary/40 transition-all active:scale-95 font-bold h-10 ml-2 shrink-0"
+                      className="px-6 rounded-xl h-9 ml-2 shrink-0 font-medium bg-blue-600 hover:bg-blue-700 text-white shadow-sm transition-all"
                     >
-                      {isPosting ? "..." : "Post"} <Send className="w-4 h-4 ml-2" />
+                      {isPosting ? "..." : "Post"} <Send className="w-3.5 h-3.5 ml-2" />
                     </Button>
                   </div>
                 </div>
               </div>
-            </div>
           </Card>
 
           {/* Filters Bar */}
@@ -416,7 +414,7 @@ const CommunityPage = () => {
           <div className="space-y-6">
             {isLoading ? (
               [1, 2, 3].map(i => (
-                <Card key={i} className="p-6 border-none shadow-premium bg-card/40 backdrop-blur-sm ring-1 ring-border/50">
+                <Card key={i} className="p-6 bg-white border border-slate-200 shadow-sm rounded-2xl">
                   <div className="flex gap-4 mb-4">
                     <Skeleton className="h-12 w-12 rounded-full" />
                     <div className="space-y-2">
@@ -433,10 +431,10 @@ const CommunityPage = () => {
               ))
             ) : filteredPosts.length > 0 ? (
               filteredPosts.map((post) => (
-                <Card key={post.id} className={`p-0 border-none shadow-premium bg-card/40 backdrop-blur-sm ring-1 ring-border/50 overflow-hidden hover:ring-primary/20 transition-all group/post ${post.category === 'event' ? 'ring-2 ring-orange-500/10' : ''}`}>
-                  {post.category === 'event' && <div className="h-1 w-full bg-gradient-to-r from-orange-400 to-rose-400"></div>}
-                  <div className="p-6">
-                    <div className="flex items-start justify-between">
+                <Card key={post.id} className={`p-6 bg-white border border-slate-200 shadow-sm rounded-2xl transition-all hover:shadow-md hover:border-slate-300 group/post ${post.category === 'event' ? 'border-orange-200 bg-orange-50/10' : ''}`}>
+                  <div className="relative z-10">
+                    {post.category === 'event' && <div className="absolute top-0 right-0 w-32 h-32 bg-orange-100/50 blur-[50px] rounded-full pointer-events-none -translate-y-1/2 translate-x-1/2"></div>}
+                    <div className="flex items-start justify-between relative z-10">
                       <div className="flex gap-3">
                         <Avatar className="w-11 h-11 ring-2 ring-primary/5 transition-transform group-hover/post:scale-105">
                           <AvatarImage src={post.User?.avatar} />
@@ -592,7 +590,7 @@ const CommunityPage = () => {
         </div>
 
         {/* Right Column: Sidebar */}
-        <div className="w-full md:w-[340px] space-y-6">
+        <div className="w-full xl:w-[340px] space-y-6">
           <div className="sticky top-6">
             {/* Search */}
             <div className="relative mb-8 group">
@@ -609,16 +607,15 @@ const CommunityPage = () => {
             </div>
 
             {/* Circles Section */}
-            <Card className="border-none shadow-xl bg-card/60 backdrop-blur-xl ring-1 ring-border/50 overflow-hidden relative rounded-[32px] p-6">
-              <div className="absolute -top-12 -right-12 w-40 h-40 bg-primary/5 rounded-full blur-3xl opacity-50"></div>
-
-              <div className="flex items-center justify-between mb-8 relative z-10">
+            <Card className="bg-white border border-slate-200 shadow-sm rounded-3xl p-6 relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-purple-100 blur-[50px] rounded-full pointer-events-none -translate-y-1/2 translate-x-1/2"></div>
+              <div className="flex items-center justify-between mb-6 relative z-10">
                 <div>
-                  <h2 className="text-xl font-black text-foreground">Discovery</h2>
-                  <p className="text-[11px] text-muted-foreground font-bold tracking-widest uppercase mt-1">Active Circles</p>
+                  <h2 className="text-base font-bold text-slate-800">Discovery</h2>
+                  <p className="text-xs text-muted-foreground mt-0.5">Active Circles</p>
                 </div>
-                <Button size="icon" variant="ghost" className="rounded-full h-9 w-9 hover:bg-primary/10 hover:text-primary transition-all active:scale-90" onClick={() => setIsCircleDialogOpen(true)}>
-                  <Plus className="w-5 h-5" />
+                <Button size="icon" variant="outline" className="h-8 w-8 rounded-md" onClick={() => setIsCircleDialogOpen(true)}>
+                  <Plus className="w-4 h-4" />
                 </Button>
               </div>
 
@@ -628,7 +625,7 @@ const CommunityPage = () => {
                   return (
                     <div
                       key={circle.id}
-                      className={`p-3.5 rounded-2xl border transition-all cursor-pointer group hover:shadow-md ${selectedCircle === circle.id ? 'bg-primary/5 border-primary/20 shadow-inner ring-1 ring-primary/10' : 'bg-transparent border-transparent hover:bg-secondary/40'}`}
+                      className={`p-3.5 rounded-2xl border transition-all cursor-pointer group hover:bg-slate-50 ${selectedCircle === circle.id ? 'bg-slate-50 border-slate-200 shadow-sm text-slate-900' : 'bg-transparent border-transparent text-slate-500'}`}
                       onClick={() => setSelectedCircle(selectedCircle === circle.id ? null : circle.id)}
                     >
                       <div className="flex items-center gap-4">
@@ -676,16 +673,15 @@ const CommunityPage = () => {
             </Card>
 
             {/* Premium Info Box */}
-            <div className="mt-6 bg-gradient-to-br from-primary/15 via-primary/10 to-transparent rounded-[32px] p-7 border border-primary/10 relative overflow-hidden group shadow-lg">
-              <div className="absolute -right-6 -bottom-6 w-32 h-32 bg-primary/20 rounded-full blur-3xl group-hover:scale-150 transition-transform duration-1000"></div>
-              <div className="relative z-10">
-                <div className="w-10 h-10 bg-primary/20 rounded-xl flex items-center justify-center mb-4">
-                  <Info className="w-5 h-5 text-primary" />
+            <div className="mt-6 bg-white border border-slate-200 shadow-sm rounded-3xl p-6 relative overflow-hidden group">
+              <div className="flex items-center gap-3 mb-4 relative z-10">
+                <div className="w-10 h-10 bg-blue-50 rounded-xl flex items-center justify-center border border-blue-100">
+                  <Info className="w-5 h-5 text-blue-600 group-hover:scale-110 transition-transform" />
                 </div>
-                <h3 className="text-lg font-black text-foreground mb-2">Hostel Guidelines</h3>
-                <p className="text-xs text-muted-foreground leading-relaxed font-bold mb-6 opacity-80">Please maintain respect and kindness in the community space. No spam or harassment.</p>
-                <Button className="w-full bg-foreground text-background hover:opacity-90 rounded-2xl text-[11px] font-black uppercase tracking-widest py-5 h-auto transition-all shadow-lg hover:shadow-foreground/20 active:scale-95">Read Rules</Button>
+                <h3 className="text-base font-bold text-slate-800">Guidelines</h3>
               </div>
+              <p className="text-xs text-slate-500 mb-5 relative z-10 font-medium leading-relaxed">Maintain respect and kindness in the community space. No spam or harassment.</p>
+              <Button variant="outline" className="w-full rounded-xl text-xs h-9 text-slate-700 transition-all">Read Rules</Button>
             </div>
           </div>
         </div>

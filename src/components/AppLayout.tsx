@@ -1,74 +1,53 @@
-import { Outlet } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Outlet, useLocation } from "react-router-dom";
 import AppSidebar from "@/components/AppSidebar";
 import { useAuth } from "@/contexts/AuthContext";
 import Chatbot from "@/components/Chatbot";
 
 const AppLayout = () => {
   const { user } = useAuth();
+  const location = useLocation();
 
   return (
-    <div
-      className="min-h-screen flex"
-      style={{
-  background: `
-    radial-gradient(ellipse at 15% 15%, rgba(124, 92, 191, 0.25) 0%, transparent 55%),
-    radial-gradient(ellipse at 85% 85%, rgba(74, 48, 128, 0.18) 0%, transparent 55%),
-    radial-gradient(ellipse at 50% 0%, rgba(100, 70, 160, 0.12) 0%, transparent 45%),
-    #0f0a14
-  `
-}}
-    >
+    <div className="flex bg-slate-50 text-slate-900 font-sans selection:bg-blue-500/30 selection:text-blue-900 min-h-screen">
       <AppSidebar />
 
-      {/* Main area — offset by sidebar width */}
-      <div
-        className="flex flex-col flex-1 lg:pl-[260px] transition-all duration-300 min-h-screen p-3 gap-5"
-      >
+      {/* Main area offset by exact width of fixed w-64 (256px) sidebar */}
+      <div className="flex flex-col flex-1 min-h-screen p-4 sm:p-6 gap-4 sm:gap-6 ml-64 relative overflow-x-hidden">
         {/* Header card */}
         <header
-          className="fixed top-6 flex items-center justify-between px-5 py-3 rounded-2xl sticky top-3 z-30"
-          style={{ background: "#412959" }}
+          className="flex items-center justify-between px-6 py-4 rounded-2xl sticky top-4 z-30 bg-white/80 backdrop-blur-xl border border-slate-200 shadow-sm"
         >
-          <div className="ml-10 lg:ml-0">
-            <h2 className="text-sm font-medium text-white">
-              Welcome back, {user?.name}
+          <div className="ml-12 lg:ml-0 flex flex-col justify-center">
+            <h2 className="text-lg font-bold text-slate-800 tracking-tight">
+              Welcome back, <span className="text-blue-600">{user?.name}</span>
             </h2>
-            <p className="text-xs capitalize" style={{ color: "rgba(255,255,255,0.4)" }}>
-              {user?.role}
-              {user?.room ? ` · Room ${user.room}` : ""}
+            <p className="text-xs font-medium text-slate-500 flex items-center gap-1.5 mt-0.5">
+              <span className="uppercase tracking-widest text-blue-600/80">{user?.role}</span>
+              {user?.room && <span className="w-1 h-1 rounded-full bg-slate-300" />}
+              {user?.room && <span>Room {user.room}</span>}
             </p>
           </div>
 
-          {/* Optional right-side badge or actions */}
-          <div
-            className="text-xs px-3 py-1 rounded-full"
-            style={{
-              background: "rgba(167,139,250,0.12)",
-              border: "0.5px solid rgba(167,139,250,0.25)",
-              color: "#c4b5fd",
-            }}
-          >
-            Spring 2026
-          </div>
+          {/* Right-side User Profile */}
+          {user && (
+            <div className="flex items-center gap-3">
+              <div className="flex flex-col items-end hidden sm:flex">
+                <span className="text-sm font-bold text-slate-900 tracking-tight">{user.name}</span>
+                <span className="text-[11px] font-semibold text-slate-500 uppercase tracking-widest">{user.role}</span>
+              </div>
+              <div className="flex items-center justify-center w-10 h-10 rounded-full text-sm font-bold text-blue-700 bg-blue-100/50 border border-blue-200 shadow-sm shrink-0">
+                {user.name.split(" ").map((n: string) => n[0]).join("").slice(0, 2).toUpperCase()}
+              </div>
+            </div>
+          )}
         </header>
 
-        {/* Content area with gradient background */}
+        {/* Content area */}
         <main
-          className="flex-1 rounded-2xl relative overflow-hidden"
-          style={{ minHeight: "unset",
-            background: "#7d6495"
-           }}
+          className="flex-1 rounded-3xl relative z-10 w-full min-h-0 relative"
         >
-          {/* Gradient background layer */}
-          
-
-          {/* Subtle grid texture overlay */}
-          
-
-          {/* Actual page content */}
-          <div className="relative z-10 p-6">
-            <Outlet />
-          </div>
+          <Outlet />
         </main>
       </div>
 

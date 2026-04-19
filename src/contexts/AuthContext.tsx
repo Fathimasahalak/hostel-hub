@@ -9,6 +9,8 @@ interface User {
   email: string;
   role: UserRole;
   hostelRoom?: string;
+  room?: string;
+  avatar?: string;
   studentId?: string;
   phoneNumber?: string;
   address?: string;
