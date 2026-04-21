@@ -7,10 +7,10 @@ import { toast } from "sonner";
 type AttendanceStatus = "present" | "absent" | "leave" | "mess_cut";
 
 const STATUS_COLORS: Record<AttendanceStatus, string> = {
-  present: "bg-success text-success-foreground",
-  absent: "bg-destructive text-destructive-foreground",
-  leave: "bg-warning text-warning-foreground",
-  mess_cut: "bg-purple-500 text-white",
+  present: "bg-blue-700 text-white",
+  absent: "bg-blue-500 text-white",
+  leave: "bg-blue-400 text-white",
+  mess_cut: "bg-blue-200 text-blue-900 border border-blue-300",
 };
 
 const STATUS_LABELS: Record<AttendanceStatus, string> = {
@@ -266,7 +266,7 @@ const AdminDailyView = ({ date, students, attendance, onPrev, onNext, onMark, on
             <ChevronRight className="w-5 h-5 text-foreground" />
           </button>
         </div>
-        <Button onClick={onSave} className="gap-2">
+        <Button onClick={onSave} className="gap-2 bg-blue-600 hover:bg-blue-700 text-white border-0">
           <Save className="w-4 h-4" /> Save Attendance
         </Button>
       </div>

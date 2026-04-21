@@ -109,6 +109,30 @@ const BillsPage = () => {
     }
   };
 
+  const markAsPaid = async (id: string) => {
+    try {
+      const headers = {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem("token")}`
+      };
+      const res = await fetch(`http://127.0.0.1:5000/api/fees/${id}/pay`, {
+        method: 'PATCH',
+        headers,
+        body: JSON.stringify({ isPaid: true })
+      });
+      
+      if (res.ok) {
+        toast.success("Fee marked as paid");
+        fetchFees();
+      } else {
+        const data = await res.json();
+        toast.error(data.error || "Could not mark as paid");
+      }
+    } catch (e) {
+       toast.error("An error occurred");
+    }
+  };
+
   if (loading && fees.length === 0) {
     return <div className="flex justify-center p-8"><Loader2 className="animate-spin" /></div>;
   }
@@ -197,9 +221,16 @@ const BillsPage = () => {
                   <h3 className="font-semibold text-lg">{fee.month}</h3>
                   {user?.role === 'admin' && <p className="text-sm text-muted-foreground">{fee.User?.name} ({fee.User?.hostelRoom})</p>}
                 </div>
-                <Badge variant="outline" className={fee.isPaid ? "bg-success/10 text-success" : "bg-warning/10 text-warning-foreground"}>
-                  {fee.isPaid ? <><CheckCircle2 className="w-3 h-3 mr-1" /> Paid</> : <><Clock className="w-3 h-3 mr-1" /> Pending</>}
-                </Badge>
+                <div className="flex flex-col items-end gap-2 shrink-0">
+                  <Badge variant="outline" className={fee.isPaid ? "bg-success/10 text-success" : "bg-warning/10 text-warning-foreground"}>
+                    {fee.isPaid ? <><CheckCircle2 className="w-3 h-3 mr-1" /> Paid</> : <><Clock className="w-3 h-3 mr-1" /> Pending</>}
+                  </Badge>
+                  {user?.role === 'admin' && !fee.isPaid && (
+                     <Button size="sm" className="h-7 text-xs bg-blue-600 hover:bg-blue-700 text-white" onClick={() => markAsPaid(fee.id)}>
+                        Mark as Paid
+                     </Button>
+                  )}
+                </div>
               </div>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
                 <div><span className="text-muted-foreground">Mess Charge:</span> ₹{fee.messCharge}</div>

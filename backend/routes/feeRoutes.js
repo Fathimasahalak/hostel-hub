@@ -145,4 +145,19 @@ router.post('/', authenticateToken, authorizeRole(['admin']), async (req, res) =
     }
 });
 
+// Mark Fee as Paid (Admin only)
+router.patch('/:id/pay', authenticateToken, authorizeRole(['admin']), async (req, res) => {
+    try {
+        const fee = await Fee.findByPk(req.params.id);
+        if (!fee) return res.status(404).json({ error: 'Fee record not found' });
+
+        const { isPaid } = req.body;
+        
+        await fee.update({ isPaid: isPaid !== undefined ? isPaid : true });
+        res.json({ message: 'Fee status updated successfully' });
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to update fee status' });
+    }
+});
+
 module.exports = router;

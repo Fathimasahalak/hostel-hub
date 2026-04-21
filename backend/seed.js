@@ -9,14 +9,14 @@ const seedDatabase = async () => {
         const studentPassword = await bcrypt.hash('student123', 10);
 
         await User.create({
-            name: 'Dr. Sharma',
+            name: 'Thushara',
             email: 'admin@hostel.com',
             password: hashedPassword,
             role: 'admin'
         });
 
         await User.create({
-            name: 'Arjun Mehta',
+            name: 'Sahala',
             email: 'student@hostel.com',
             password: studentPassword,
             role: 'student',

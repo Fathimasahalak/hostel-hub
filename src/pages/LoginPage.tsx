@@ -101,11 +101,10 @@ const LoginPage = () => {
       <div className="absolute inset-0 gradient-hero opacity-[0.03]" />
       <div className="relative w-full max-w-md animate-fade-in">
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl gradient-primary mb-4 shadow-elevated">
-            <Building2 className="w-8 h-8 text-primary-foreground" />
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-blue-600 mb-4 shadow-sm">
+            <Building2 className="w-8 h-8 text-white" />
           </div>
-          <h1 className="text-2xl font-bold text-foreground">HostelHub</h1>
-          <p className="text-muted-foreground mt-1">Hostel Management System</p>
+          <h1 className="text-2xl font-bold text-slate-900 tracking-tight">HostelHub</h1>
         </div>
 
         <div className="bg-card rounded-xl shadow-elevated border border-border p-6">
@@ -164,14 +163,14 @@ const LoginPage = () => {
                   <p className="text-sm text-destructive bg-destructive/10 rounded-lg p-3">{error}</p>
                 )}
 
-                <Button type="submit" disabled={isLoading} className="w-full gradient-primary text-primary-foreground hover:opacity-90 transition-opacity">
+                <Button type="submit" disabled={isLoading} className="w-full bg-blue-600 hover:bg-blue-700 text-white border-0 transition-colors">
                   <LogIn className="w-4 h-4 mr-2" />
                   {isLoading ? 'Signing in...' : `Sign In as ${activeTab === "student" ? "Student" : "Admin"}`}
                 </Button>
 
                 <div className="text-center mt-4">
                   <p className="text-sm text-muted-foreground">
-                    Don't have an account? <button type="button" onClick={() => { setIsRegistering(true); setError(""); }} className="text-primary hover:underline font-medium">Register</button>
+                    Don't have an account? <button type="button" onClick={() => { setIsRegistering(true); setError(""); }} className="text-blue-600 hover:text-blue-800 hover:underline font-medium transition-colors">Register</button>
                   </p>
                 </div>
               </form>
@@ -206,24 +205,19 @@ const LoginPage = () => {
                   <p className="text-sm text-destructive bg-destructive/10 rounded-lg p-3">{error}</p>
                 )}
 
-                <Button type="submit" disabled={isLoading} className="w-full gradient-primary text-primary-foreground hover:opacity-90 transition-opacity">
+                <Button type="submit" disabled={isLoading} className="w-full bg-blue-600 hover:bg-blue-700 text-white border-0 transition-colors">
                   {isLoading ? 'Creating Account...' : 'Register'}
                 </Button>
 
                 <div className="text-center mt-4">
                   <p className="text-sm text-muted-foreground">
-                    Already have an account? <button type="button" onClick={() => { setIsRegistering(false); setError(""); }} className="text-primary hover:underline font-medium">Sign In</button>
+                    Already have an account? <button type="button" onClick={() => { setIsRegistering(false); setError(""); }} className="text-blue-600 hover:text-blue-800 hover:underline font-medium transition-colors">Sign In</button>
                   </p>
                 </div>
               </form>
             </>
           )}
 
-          {!isRegistering && (
-            <p className="text-xs text-muted-foreground text-center mt-4">
-              Demo: {activeTab === "student" ? "student@hostel.com / student123" : "admin@hostel.com / admin123"}
-            </p>
-          )}
         </div>
       </div>
     </div>

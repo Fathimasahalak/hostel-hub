@@ -51,7 +51,7 @@ const Chatbot = () => {
       {/* FAB */}
       <button
         onClick={() => setOpen(!open)}
-        className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full bg-[#7c5cbf] text-primary-foreground shadow-elevated flex items-center justify-center hover:opacity-90 transition-opacity"
+        className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full bg-blue-600 text-white shadow-elevated flex items-center justify-center hover:opacity-90 transition-opacity"
       >
         {open ? <X className="w-6 h-6" /> : <MessageCircle className="w-6 h-6" />}
       </button>
@@ -59,10 +59,10 @@ const Chatbot = () => {
       {/* Chat window */}
       {open && (
         <div className="fixed bottom-24 right-6 z-50 w-80 sm:w-96 bg-card rounded-xl border border-border shadow-elevated animate-scale-in flex flex-col" style={{ height: "28rem" }}>
-          <div className="px-4 py-3 border-b border-border gradient-primary rounded-t-xl">
+          <div className="px-4 py-3 border-b border-border bg-blue-600 rounded-t-xl">
             <div className="flex items-center gap-2">
-              <Bot className="w-5 h-5 text-primary-foreground" />
-              <span className="font-semibold text-primary-foreground">HostelBot</span>
+              <Bot className="w-5 h-5 text-white" />
+              <span className="font-semibold text-white">HostelBot</span>
             </div>
           </div>
 
@@ -76,7 +76,7 @@ const Chatbot = () => {
                 )}
                 <div className={`max-w-[75%] px-3 py-2 rounded-xl text-sm ${
                   m.sender === "user"
-                    ? "gradient-primary text-primary-foreground rounded-br-md"
+                    ? "bg-blue-600 text-white rounded-br-md"
                     : "bg-muted text-foreground rounded-bl-md"
                 }`}>
                   {m.text}
@@ -102,7 +102,7 @@ const Chatbot = () => {
                 placeholder="Ask about hostel..."
                 className="flex-1 px-3 py-2 text-sm rounded-lg bg-muted text-foreground placeholder:text-muted-foreground border-0 outline-none focus:ring-2 focus:ring-primary/30"
               />
-              <button type="submit" className="p-2 rounded-lg gradient-primary text-primary-foreground hover:opacity-90 transition-opacity">
+              <button type="submit" className="p-2 rounded-lg bg-blue-600 text-white hover:opacity-90 transition-opacity">
                 <Send className="w-4 h-4" />
               </button>
             </form>

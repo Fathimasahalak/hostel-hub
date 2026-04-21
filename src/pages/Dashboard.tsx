@@ -18,7 +18,7 @@ const Dashboard = () => {
 
         // Parallel data fetching for dashboard
         const [attendanceRes, feesRes, complaintsRes] = await Promise.all([
-          fetch(`http://127.0.0.1:5000/api/attendance?date=${new Date().toISOString().split('T')[0]}`, { headers }),
+          fetch(`http://127.0.0.1:5000/api/attendance`, { headers }),
           fetch('http://127.0.0.1:5000/api/fees', { headers }),
           fetch('http://127.0.0.1:5000/api/complaints', { headers })
         ]);
@@ -64,74 +64,86 @@ const AdminDashboard = ({ stats }: { stats: any }) => {
   // For now, let's derive what we can.
 
   const attendance = Array.isArray(stats?.attendance) ? stats.attendance : [];
-  const presentCount = attendance.filter((a: any) => a.status === 'present').length;
-  const absentCount = attendance.filter((a: any) => a.status === 'absent').length;
+  
+  // Calculate today's attendance
+  const todayStr = new Date().toISOString().split('T')[0];
+  const todaysAttendance = attendance.filter((a: any) => a.date === todayStr);
+  const presentCount = todaysAttendance.filter((a: any) => a.status === 'present').length;
+  const absentCount = todaysAttendance.filter((a: any) => a.status === 'absent').length;
 
-  // Mock weekly data to show trends since API only returns today's data currently
-  const weeklyAttendanceData = [
-    { day: 'Mon', present: presentCount > 50 ? presentCount - 12 : 110, absent: absentCount + 5 },
-    { day: 'Tue', present: presentCount > 50 ? presentCount - 5 : 115, absent: absentCount - 2 },
-    { day: 'Wed', present: presentCount > 50 ? presentCount : 120, absent: absentCount },
-    { day: 'Thu', present: presentCount > 50 ? presentCount - 15 : 105, absent: absentCount + 8 },
-    { day: 'Fri', present: presentCount > 50 ? presentCount + 2 : 122, absent: absentCount - 1 },
-    { day: 'Sat', present: presentCount > 50 ? presentCount - 30 : 90, absent: absentCount + 15 },
-    { day: 'Sun', present: presentCount, absent: absentCount },
-  ];
+  // Generate real weekly data from the last 7 days
+  const last7Days = Array.from({ length: 7 }, (_, i) => {
+    const d = new Date();
+    d.setDate(d.getDate() - (6 - i));
+    return d.toISOString().split('T')[0];
+  });
+
+  const weeklyAttendanceData = last7Days.map(dateStr => {
+    const dayAttendance = attendance.filter((a: any) => a.date === dateStr);
+    const dayName = new Date(dateStr).toLocaleDateString('en-US', { weekday: 'short' });
+    return {
+      day: dayName,
+      present: dayAttendance.filter((a: any) => a.status === 'present').length,
+      absent: dayAttendance.filter((a: any) => a.status === 'absent').length
+    };
+  });
+
   const complaints = Array.isArray(stats?.complaints) ? stats.complaints : [];
   const openComplaints = complaints.filter((c: any) => c.status === 'open').length || 0;
+  const inProgressComplaints = complaints.filter((c: any) => c.status === 'in_progress').length || 0;
+  const resolvedComplaints = complaints.filter((c: any) => c.status === 'resolved').length || 0;
+  const closedComplaints = complaints.filter((c: any) => c.status === 'closed').length || 0;
+
+  const pieData = [
+    { name: 'Open', value: openComplaints, color: '#1e40af' },
+    { name: 'In Progress', value: inProgressComplaints, color: '#3b82f6' },
+    { name: 'Resolved', value: resolvedComplaints, color: '#60a5fa' },
+    { name: 'Closed', value: closedComplaints, color: '#93c5fd' }
+  ].filter(d => d.value > 0);
 
   const quickStats = [
     { label: "Present Today", value: presentCount.toString(), icon: CalendarDays, to: "/attendance", color: "bg-blue-50 text-blue-600" },
-    { label: "Absent Today", value: absentCount.toString(), icon: AlertCircle, to: "/attendance", color: "bg-red-50 text-red-600" },
-    { label: "Open Complaints", value: openComplaints.toString(), icon: MessageSquareWarning, to: "/complaints", color: "bg-amber-50 text-amber-600" },
-    { label: "Total Students", value: "View All", icon: Users, to: "/attendance", color: "bg-emerald-50 text-emerald-600" },
+    { label: "Absent Today", value: absentCount.toString(), icon: AlertCircle, to: "/attendance", color: "bg-blue-50 text-blue-600" },
+    { label: "Open Complaints", value: openComplaints.toString(), icon: MessageSquareWarning, to: "/complaints", color: "bg-blue-50 text-blue-600" },
+    { label: "Total Students", value: "View All", icon: Users, to: "/attendance", color: "bg-blue-50 text-blue-600" },
   ];
 
   return (
-    <div className="space-y-6 animate-fade-in">
-      <div>
-        <h1 className="text-[22px] font-semibold text-slate-900 tracking-tight">Admin Dashboard</h1>
-        <p className="text-sm text-slate-500 font-medium mt-1">Manage hostel operations</p>
-      </div>
+    <div className="h-full flex flex-col gap-4 animate-fade-in overflow-hidden -mt-2">
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 shrink-0">
         {quickStats.map(({ label, value, icon: Icon, to, color }) => (
           <Link
             key={label}
             to={to}
-            className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm hover:shadow-md hover:border-slate-300 hover:scale-[1.02] transition-all group"
+            className="bg-white border border-slate-200 rounded-xl p-4 shadow-sm hover:shadow-md hover:border-slate-300 hover:scale-[1.02] transition-all group"
           >
             <div className="flex flex-col justify-between h-full">
-  
-  {/* Top row: label + icon */}
-  <div className="flex justify-between items-start">
-    <p className="text-sm text-slate-500 font-medium">{label}</p>
-
-    <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${color}`}>
-      <Icon className="w-5 h-5 text-current" />
-    </div>
-  </div>
-
-  {/* Bottom value */}
-  <p className="text-2xl font-bold text-slate-800 mt-4">
-    {value}
-  </p>
-
-</div>
+              <div className="flex justify-between items-start">
+                <p className="text-sm text-slate-500 font-medium">{label}</p>
+                <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${color}`}>
+                  <Icon className="w-5 h-5 text-current" />
+                </div>
+              </div>
+              <p className="text-2xl font-bold text-slate-800 mt-2">
+                {value}
+              </p>
+            </div>
           </Link>
         ))}
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 flex-1 min-h-0 pb-2">
         {/* Attendance Composed Chart */}
-        <Card className="bg-white border-slate-200 shadow-sm rounded-xl flex flex-col">
-          <CardHeader className="text-slate-800 pb-0">
+        <Card className="bg-white border-slate-200 shadow-sm rounded-xl flex flex-col h-full overflow-hidden">
+          <CardHeader className="text-slate-800 pb-2 shrink-0">
             <CardTitle className="text-lg font-bold">Attendance Overview</CardTitle>
             <p className="text-sm text-slate-500 font-medium">Daily Check-ins/outs</p>
           </CardHeader>
-          <CardContent className="flex-1 flex flex-col justify-center items-center pb-6">
-            <div className="h-[250px] w-full mt-4">
-              <ResponsiveContainer width="100%" height="100%">
+          <CardContent className="flex-1 flex flex-col justify-center items-center pb-4 min-h-0 px-4">
+            <div className="flex-1 w-full min-h-0 relative">
+              <div className="absolute inset-0">
+                <ResponsiveContainer width="100%" height="100%">
                 <ComposedChart data={weeklyAttendanceData} margin={{ top: 10, right: 20, bottom: 5, left: -20 }}>
                   <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
                   <XAxis 
@@ -175,9 +187,10 @@ const AdminDashboard = ({ stats }: { stats: any }) => {
                     activeDot={{ r: 5 }}
                   />
                 </ComposedChart>
-              </ResponsiveContainer>
+                </ResponsiveContainer>
+              </div>
             </div>
-            <div className="flex w-full justify-between mt-4 border-t border-slate-100 pt-4 px-2">
+            <div className="flex w-full justify-between mt-4 border-t border-slate-100 pt-3 px-2 shrink-0">
                <p className="text-sm text-slate-700 font-bold">Checked In: <span className="text-slate-900">{presentCount}</span></p>
                <p className="text-sm text-slate-700 font-bold">Checked Out: <span className="text-slate-900">{absentCount}</span></p>
             </div>
@@ -185,21 +198,17 @@ const AdminDashboard = ({ stats }: { stats: any }) => {
         </Card>
 
         {/* Complaints Donut Chart */}
-        <Card className="bg-white border-slate-200 shadow-sm rounded-xl flex flex-col">
-          <CardHeader className="text-slate-800 pb-0">
+        <Card className="bg-white border-slate-200 shadow-sm rounded-xl flex flex-col h-full overflow-hidden">
+          <CardHeader className="text-slate-800 pb-2 shrink-0">
             <CardTitle className="text-lg font-bold">Complaints Overview</CardTitle>
           </CardHeader>
-          <CardContent className="flex-1 flex flex-col items-center pb-6">
-            <div className="h-[220px] w-full mt-2 relative">
-              <ResponsiveContainer width="100%" height="100%">
+          <CardContent className="flex-1 flex flex-col items-center pb-4 min-h-0 px-4">
+            <div className="flex-1 w-full min-h-0 relative">
+              <div className="absolute inset-0">
+                <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie
-                    data={[
-                      { name: 'Maintenance', value: 45 },
-                      { name: 'Housekeeping', value: 30 },
-                      { name: 'Food', value: 15 },
-                      { name: 'Noise', value: 10 }
-                    ]}
+                    data={pieData.length > 0 ? pieData : [{ name: 'No Complaints', value: 1, color: '#e2e8f0' }]}
                     cx="50%"
                     cy="50%"
                     innerRadius={55}
@@ -208,33 +217,33 @@ const AdminDashboard = ({ stats }: { stats: any }) => {
                     dataKey="value"
                     stroke="none"
                   >
-                    <Cell key="cell-0" fill="#2b5c8f" />
-                    <Cell key="cell-1" fill="#4B81B7" />
-                    <Cell key="cell-2" fill="#84AEDB" />
-                    <Cell key="cell-3" fill="#cbd5e1" />
+                    {(pieData.length > 0 ? pieData : [{ name: 'No Complaints', value: 1, color: '#e2e8f0' }]).map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.color} />
+                    ))}
                   </Pie>
                   <Tooltip 
                     contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 8px 30px rgba(0,0,0,0.12)' }}
                     itemStyle={{ fontWeight: 'bold' }}
                   />
                 </PieChart>
-              </ResponsiveContainer>
-              <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                 <p className="text-2xl font-bold text-slate-900 leading-none">24</p>
-                 <p className="text-[11px] text-slate-500 font-medium">complaints</p>
+                </ResponsiveContainer>
+                <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                   <p className="text-2xl font-bold text-slate-900 leading-none">{complaints.length}</p>
+                   <p className="text-[11px] text-slate-500 font-medium">complaints</p>
+                </div>
               </div>
             </div>
             
-            <div className="grid grid-cols-2 gap-x-4 gap-y-2 mt-4 w-full px-6">
-              <div className="flex items-center gap-2"><div className="w-2.5 h-2.5 rounded-full bg-[#2b5c8f]"></div><span className="text-[13px] text-slate-600 font-medium">Maintenance</span></div>
-              <div className="flex items-center gap-2"><div className="w-2.5 h-2.5 rounded-full bg-[#4B81B7]"></div><span className="text-[13px] text-slate-600 font-medium">Housekeeping</span></div>
-              <div className="flex items-center gap-2"><div className="w-2.5 h-2.5 rounded-full bg-[#84AEDB]"></div><span className="text-[13px] text-slate-600 font-medium">Food</span></div>
-              <div className="flex items-center gap-2"><div className="w-2.5 h-2.5 rounded-full bg-[#cbd5e1]"></div><span className="text-[13px] text-slate-600 font-medium">Noise</span></div>
+            <div className="grid grid-cols-2 gap-x-4 gap-y-1 mt-3 w-full px-6 shrink-0">
+              <div className="flex items-center gap-2"><div className="w-2.5 h-2.5 rounded-full bg-[#1e40af]"></div><span className="text-[13px] text-slate-600 font-medium">Open</span></div>
+              <div className="flex items-center gap-2"><div className="w-2.5 h-2.5 rounded-full bg-[#3b82f6]"></div><span className="text-[13px] text-slate-600 font-medium">In Progress</span></div>
+              <div className="flex items-center gap-2"><div className="w-2.5 h-2.5 rounded-full bg-[#60a5fa]"></div><span className="text-[13px] text-slate-600 font-medium">Resolved</span></div>
+              <div className="flex items-center gap-2"><div className="w-2.5 h-2.5 rounded-full bg-[#93c5fd]"></div><span className="text-[13px] text-slate-600 font-medium">Closed</span></div>
             </div>
 
-            <div className="flex w-full justify-between mt-6 border-t border-slate-100 pt-4 px-2">
-               <p className="text-[13.5px] text-slate-700 font-semibold">Resolved: <span className="text-slate-900 font-bold">18</span></p>
-               <p className="text-[13.5px] text-slate-700 font-semibold">Pending: <span className="text-slate-900 font-bold">6</span></p>
+            <div className="flex w-full justify-between mt-4 border-t border-slate-100 pt-3 px-2 shrink-0">
+               <p className="text-[13.5px] text-slate-700 font-semibold">Resolved/Closed: <span className="text-slate-900 font-bold">{resolvedComplaints + closedComplaints}</span></p>
+               <p className="text-[13.5px] text-slate-700 font-semibold">Pending: <span className="text-slate-900 font-bold">{openComplaints + inProgressComplaints}</span></p>
             </div>
           </CardContent>
         </Card>
@@ -259,40 +268,32 @@ const StudentDashboard = ({ stats, user }: { stats: any, user: any }) => {
 
   const quickStats = [
     { label: "My Attendance", value: `${attendancePercentage}%`, icon: CalendarDays, to: "/attendance", color: "bg-blue-50 text-blue-600" },
-    { label: "Pending Dues", value: `₹${pendingFees}`, icon: Receipt, to: "/bills", color: "bg-rose-50 text-rose-600" },
-    { label: "My Complaints", value: openComplaints.toString(), icon: MessageSquareWarning, to: "/complaints", color: "bg-amber-50 text-amber-600" },
-    { label: "Community", value: "View", icon: Users, to: "/community", color: "bg-emerald-50 text-emerald-600" },
+    { label: "Pending Dues", value: `₹${pendingFees}`, icon: Receipt, to: "/bills", color: "bg-blue-50 text-blue-600" },
+    { label: "My Complaints", value: openComplaints.toString(), icon: MessageSquareWarning, to: "/complaints", color: "bg-blue-50 text-blue-600" },
+    { label: "Community", value: "View", icon: Users, to: "/community", color: "bg-blue-50 text-blue-600" },
   ];
 
   return (
-    <div className="space-y-6 animate-fade-in">
-      <div>
-        <h1 className="text-[22px] font-semibold text-slate-900 tracking-tight">Welcome, {user?.name}</h1>
-        <p className="text-sm text-slate-500 font-medium mt-1">Your hostel dashboard</p>
-      </div>
+    <div className="h-full flex flex-col gap-4 animate-fade-in overflow-hidden -mt-2">
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 shrink-0">
         {quickStats.map(({ label, value, icon: Icon, to, color }) => (
           <Link
             key={label}
             to={to}
-            className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm hover:shadow-md hover:border-slate-300 hover:scale-[1.02] transition-all group"
+            className="bg-white border border-slate-200 rounded-xl p-4 shadow-sm hover:shadow-md hover:border-slate-300 hover:scale-[1.02] transition-all group"
           >
            <div className="flex flex-col justify-between h-full">
-  {/* Top row: label + icon */}
-  <div className="flex justify-between items-start">
-    <p className="text-sm text-slate-500 font-medium">{label}</p>
-
-    <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${color}`}>
-      <Icon className="w-5 h-5 text-current" />
-    </div>
-  </div>
-
-  {/* Bottom value */}
-  <p className="text-2xl font-bold text-slate-800 mt-4">
-    {value}
-  </p>
-</div>
+              <div className="flex justify-between items-start">
+                <p className="text-sm text-slate-500 font-medium">{label}</p>
+                <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${color}`}>
+                  <Icon className="w-5 h-5 text-current" />
+                </div>
+              </div>
+              <p className="text-2xl font-bold text-slate-800 mt-2">
+                {value}
+              </p>
+            </div>
           </Link>
         ))}
       </div>

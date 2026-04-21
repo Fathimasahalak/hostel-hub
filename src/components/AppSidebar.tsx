@@ -22,7 +22,7 @@ const AppSidebar = () => {
 
   return (
     <>
-      <aside className={`fixed inset-y-0 left-0 z-40 bg-slate-100 border-r border-slate-200 shadow-sm flex flex-col w-64 h-screen overflow-hidden`}>
+      <aside className={`fixed inset-y-0 left-0 z-40 bg-slate-100 border-r border-slate-200 shadow-sm flex flex-col w-56 h-screen overflow-hidden`}>
         {/* Header / Logo */}
         <div className="flex items-center gap-3 px-6 h-[88px] shrink-0 relative z-10">
           <div className="flex items-center justify-center w-9 h-9 rounded-lg shrink-0 bg-blue-600 text-white shadow-sm">

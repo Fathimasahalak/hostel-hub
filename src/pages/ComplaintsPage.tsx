@@ -137,7 +137,7 @@ const ComplaintsPage = () => {
           <p className="text-muted-foreground">{user?.role === 'admin' ? 'Manage Student Complaints' : 'Submit and track your complaints'}</p>
         </div>
         {user?.role === 'student' && (
-          <Button onClick={() => setShowForm(!showForm)} className="gradient-primary text-primary-foreground gap-2">
+          <Button onClick={() => setShowForm(!showForm)} className="bg-blue-600 hover:bg-blue-700 text-white border-0 gap-2">
             <Plus className="w-4 h-4" /> New Complaint
           </Button>
         )}
@@ -168,7 +168,7 @@ const ComplaintsPage = () => {
             <Textarea placeholder="Describe the issue in detail..." value={description} onChange={e => setDescription(e.target.value)} required rows={3} />
           </div>
           <div className="flex gap-2">
-            <Button type="submit" className="gradient-primary text-primary-foreground">Submit</Button>
+            <Button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white border-0">Submit</Button>
             <Button type="button" variant="outline" onClick={() => setShowForm(false)}>Cancel</Button>
           </div>
         </form>
